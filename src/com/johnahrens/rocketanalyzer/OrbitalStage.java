@@ -24,6 +24,10 @@ package com.johnahrens.rocketanalyzer;
 /**
  * @author john
  *
+ * The OrbitalStage is a second stage that gets the payload from the suborbital stage to orbit.
+ * 
+ * At this point, some values should be calculated that aren't. But if you take an orbital stage as the payload of a 
+ * suborbital stage, you have a two stage rocket that can get to orbit. 
  */
 public class OrbitalStage extends Stage {
 	
@@ -34,5 +38,11 @@ public class OrbitalStage extends Stage {
 	public OrbitalStage(double payload, long averageIsp, double propellantRatio, double deltaV, 
 			double initialAltitude, long targetAltitude) {
 		super(payload, targetAltitude, averageIsp, 0L, 0L, 0L, deltaV, initialAltitude, propellantRatio);
+	}
+	
+	public boolean analyzeStage() {
+		boolean retval = true;
+		
+		return retval;
 	}
 }

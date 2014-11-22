@@ -33,6 +33,8 @@ public abstract class Stage {
 	public final static double GRAVITY = 9.8; /// Standard earth gravity = 9.8 meters per second per second
 	public final static double METERS = 1000; /// Meters per kilometer
 	public final static double PERCENT = 100;
+	public final static double STD_GRAVITATIONAL_PARAM_EARTH = 398600.4; // kilometers cubed/second squared
+	public final static double EARTH_RADIUS = 6371.0; // kilometers
 	
 	private double payload; /// in kilograms
 	private long targetAltitude; /// in kilometers
@@ -52,21 +54,24 @@ public abstract class Stage {
 	
 	public Stage(double payload, long targetAltitude, long averageIsp, long thrustDuration, long gravityLosses, 
 				 long aeroLosses, double deltaV, double startingAltitude, double propellantRatio) {
-		this.payload = payload;
-		this.targetAltitude = targetAltitude;
-		this.averageIsp = averageIsp;
-		this.thrustDuration = thrustDuration;
-		this.gravityLosses = gravityLosses;
-		this.aeroLosses = aeroLosses;
-		this.deltaV = deltaV;
-		this.startingAltitude = startingAltitude;
-		this.propellantRatio = propellantRatio / PERCENT;
 		
-		this.propellantMass = 0.0;
-		this.structuralMass = 0.0;
-		this.emptyMass = 0.0;
-		this.loadedMass = 0.0;
+		setPayload(payload);
+		setTargetAltitude(targetAltitude);
+		setAverageIsp(averageIsp);
+		setThrustDuration(thrustDuration);
+		setGravityLosses(gravityLosses);
+		setAeroLosses(aeroLosses);
+		setDeltaV(deltaV);
+		setStartingAltitude(startingAltitude);
+		setPropellantRatio(propellantRatio);
+		
+		setPropellantMass(0.0);
+		setStructuralMass(0.0);
+		setEmptyMass(0.0);
+		setLoadedMass(0.0);
 	}
+	
+	public abstract boolean analyzeStage();
 	
 	/**
 	 * @return the payload, in kilograms
@@ -191,7 +196,11 @@ public abstract class Stage {
 	 * @param propellantRatio the propellantRatio, in percent, to set
 	 */
 	public void setPropellantRatio(double propellantRatio) {
-		this.propellantRatio = propellantRatio / PERCENT;
+		if (0 >= propellantRatio || 100 <= propellantRatio) {
+			this.propellantRatio = Double.NaN;
+		} else {
+			this.propellantRatio = propellantRatio / PERCENT;
+		}
 	}
 	
 	/**

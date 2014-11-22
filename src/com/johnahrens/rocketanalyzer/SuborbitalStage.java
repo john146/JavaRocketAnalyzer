@@ -61,9 +61,13 @@ public class SuborbitalStage extends Stage {
 		setDeltaV(velocity + getGravityLosses() + getAeroLosses());
 		// The mass ratio 
 		double massRatio = Math.pow(Math.E, getDeltaV() / (GRAVITY * getAverageIsp()));
-		setPropellantMass((getPayload() * (1 - massRatio)) / ((massRatio - 1) * (1 / getPropellantRatio() - 1) - 1));
-		
-		setStructuralMass(getPropellantMass() * ((1 / getPropellantRatio()) - 1));
+		double pr = getPropellantRatio();
+		if (0.0 == Double.compare(Double.NaN, pr)) {
+			retval = false;
+		} else {
+			setPropellantMass((getPayload() * (1 - massRatio)) / ((massRatio - 1) * (1 / pr - 1) - 1));
+			setStructuralMass(getPropellantMass() * ((1 / pr) - 1));
+		}
 		
 		return retval;
 	}

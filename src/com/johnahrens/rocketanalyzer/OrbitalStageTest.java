@@ -64,8 +64,18 @@ public class OrbitalStageTest {
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testAnalyzeStage185KmOrbit() {
+		double payload = 0.10; // kilograms
+		long averageIsp = 310; // seconds
+		double propellantRatio = 80; // percent
+		double deltaV = 4.0; // kilometers/second
+		double initialAltitude = 65; // kilometers
+		long targetAltitude = 185; // kilometers
+		OrbitalStage os = new OrbitalStage(payload, averageIsp, propellantRatio, deltaV, initialAltitude, 
+										   targetAltitude);
+		assertNotNull("Failed to construct OrbitalStage", os);
+		assertTrue("OrbitalStage analysis failed.", os.analyzeStage());
+
 	}
 
 }

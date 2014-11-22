@@ -84,7 +84,7 @@ public class SuborbitalStageTest {
 	/**
 	 * Test stage analysis assuming starting at sea-level, 0 velocity and attempting to lift 10 kilograms to
 	 * 65 kilometers. Our rocket engine ISP is 245 seconds, will burn for 40 seconds, losing 393 m/s to gravity and
-	 * 640 m/s to aerodynamic drag. Propellent ratio is 80%.
+	 * 640 m/s to aerodynamic drag. Propellant ratio is 80%.
 	 * 
 	 * Expect a result of Mass lofted of 10 kilograms, Mass of propellant of 23.0 kilograms and a structural mass 
 	 * of 5.75 kilograms.
@@ -97,5 +97,28 @@ public class SuborbitalStageTest {
 		assertEquals("Incorrect payload mass.", 10, ss.getPayload(), 0.001);
 		assertEquals("Incorrect propellant mass.", 23.0030, ss.getPropellantMass(), 0.001);
 		assertEquals("Incorrect structural mass.", 5.7508, ss.getStructuralMass(), 0.001);
+	}
+	
+	/**
+	 * Test propellant ratio of 0.0. Since this would set up a divide by zero situation, we need to make sure that this
+	 * is handled properly. There are thee places to handle it. In the constructor, in the setter, and in the 
+	 * analyzeStage() method where it gets used. This is in all cases a nonsense value.
+	 */
+	@Test
+	public void testSetPropellantRatioToZero() {
+		SuborbitalStage ss = new SuborbitalStage(10.0, 65L, 245L, 40L, 393L, 640L, 0L);
+		assertNotNull("No SuborbitalStage constructed.", ss);
+		assertFalse("With zero value propellantRatio, should fail to analyze stage.", ss.analyzeStage());
+	}
+	
+	/**
+	 * Test propellant ratio of 1.0 (or 100%). Since this would be a value that makes no sense, and in some cases may
+	 * create a divide by zero issue, we are ensuring a failure when this is the value.
+	 */
+	@Test
+	public void testSetPropellantRatioTo100Percent() {
+		SuborbitalStage ss = new SuborbitalStage(10.0, 65L, 245L, 40L, 393L, 640L, 100L);
+		assertNotNull("No SuborbitalStage constructed.", ss);
+		assertFalse("With 100% propellantRatio, should fail to analyze stage.", ss.analyzeStage());
 	}
 }
